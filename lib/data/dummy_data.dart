@@ -32,4 +32,28 @@ final dummyProducts = [
     imageUrl:
         'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Cast-Iron-Pan.jpg/1024px-Cast-Iron-Pan.jpg',
   ),
+  Product(
+    id: 'p5',
+    title: 'Blue Sneakers',
+    description: 'Comfortable blue sneakers for everyday wear.',
+    price: 89.99,
+    imageUrl:
+        'https://cdn.pixabay.com/photo/2016/11/29/09/24/sneakers-1861490_1280.jpg',
+  ),
+  Product(
+    id: 'p6',
+    title: 'Green Hat',
+    description: 'A stylish green hat for sunny days.',
+    price: 15.99,
+    imageUrl:
+        'https://cdn.pixabay.com/photo/2015/03/30/12/37/hat-659652_1280.jpg',
+  ),
+  Product(
+    id: 'p7',
+    title: 'Purple Dress',
+    description: 'A beautiful purple dress for special occasions.',
+    price: 79.99,
+    imageUrl:
+        'https://cdn.pixabay.com/photo/2016/11/29/09/24/dress-1861491_1280.jpg',
+  ),
 ];
