@@ -29,146 +29,164 @@ class _CartPageState extends State<CartPage> {
                 padding: const EdgeInsets.all(8.0),
                 itemCount: cart.itemCount,
                 itemBuilder: (context, index) {
-                  return Card(
-                    margin: const EdgeInsets.symmetric(
-                      vertical: 4.0,
-                      horizontal: 8.0,
+                  return Dismissible(
+                    key: ValueKey(cart.items.values.elementAt(index).productId),
+                    background: Container(
+                      color: Colors.red,
+                      alignment: Alignment.centerRight,
+                      padding: const EdgeInsets.only(right: 20),
+                      child: const Icon(
+                        Icons.delete,
+                        color: Colors.white,
+                        size: 30,
+                      ),
                     ),
-                    elevation: 2,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        children: [
-                          // Imagem do Produto
-                          Container(
-                            width: 60,
-                            height: 60,
-                            decoration: BoxDecoration(
-                              color: Colors.grey.shade200,
-                              borderRadius: BorderRadius.circular(8),
+                    onDismissed: (_) {
+                      cart.deleteItem(
+                        cart.items.values.elementAt(index).productId as String,
+                      );
+                    },
+                    child: Card(
+                      margin: const EdgeInsets.symmetric(
+                        vertical: 4.0,
+                        horizontal: 8.0,
+                      ),
+                      elevation: 2,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          children: [
+                            // Imagem do Produto
+                            Container(
+                              width: 60,
+                              height: 60,
+                              decoration: BoxDecoration(
+                                color: Colors.grey.shade200,
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(8),
+                                child: cart.items.values
+                                            .elementAt(index)
+                                            .imageUrl !=
+                                        null
+                                    ? Image.network(
+                                        cart.items.values
+                                            .elementAt(index)
+                                            .imageUrl!,
+                                        fit: BoxFit.cover,
+                                        errorBuilder:
+                                            (context, error, stackTrace) {
+                                          return Icon(
+                                            Icons.image_not_supported,
+                                            color: Colors.grey.shade400,
+                                            size: 30,
+                                          );
+                                        },
+                                        loadingBuilder:
+                                            (context, child, loadingProgress) {
+                                          if (loadingProgress == null)
+                                            return child;
+                                          return Center(
+                                            child: CircularProgressIndicator(
+                                              strokeWidth: 2,
+                                              value: loadingProgress
+                                                          .expectedTotalBytes !=
+                                                      null
+                                                  ? loadingProgress
+                                                          .cumulativeBytesLoaded /
+                                                      loadingProgress
+                                                          .expectedTotalBytes!
+                                                  : null,
+                                            ),
+                                          );
+                                        },
+                                      )
+                                    : Icon(
+                                        Icons.image_not_supported,
+                                        color: Colors.grey.shade400,
+                                        size: 30,
+                                      ),
+                              ),
                             ),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(8),
-                              child: cart.items.values
-                                          .elementAt(index)
-                                          .imageUrl !=
-                                      null
-                                  ? Image.network(
-                                      cart.items.values
-                                          .elementAt(index)
-                                          .imageUrl!,
-                                      fit: BoxFit.cover,
-                                      errorBuilder:
-                                          (context, error, stackTrace) {
-                                        return Icon(
-                                          Icons.image_not_supported,
-                                          color: Colors.grey.shade400,
-                                          size: 30,
-                                        );
-                                      },
-                                      loadingBuilder:
-                                          (context, child, loadingProgress) {
-                                        if (loadingProgress == null)
-                                          return child;
-                                        return Center(
-                                          child: CircularProgressIndicator(
-                                            strokeWidth: 2,
-                                            value: loadingProgress
-                                                        .expectedTotalBytes !=
-                                                    null
-                                                ? loadingProgress
-                                                        .cumulativeBytesLoaded /
-                                                    loadingProgress
-                                                        .expectedTotalBytes!
-                                                : null,
-                                          ),
-                                        );
-                                      },
-                                    )
-                                  : Icon(
-                                      Icons.image_not_supported,
-                                      color: Colors.grey.shade400,
-                                      size: 30,
+
+                            const SizedBox(width: 12),
+
+                            // Informações do Produto
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    '${cart.items.values.elementAt(index).name}',
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
                                     ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    'R\$ ${cart.items.values.elementAt(index).price.toStringAsFixed(2)}',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.grey.shade600,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
 
-                          const SizedBox(width: 12),
-
-                          // Informações do Produto
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                            // Controles de quantidade - compactos
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
                               children: [
-                                Text(
-                                  '${cart.items.values.elementAt(index).name}',
-                                  style: const TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
+                                SizedBox(
+                                  width: 32,
+                                  height: 32,
+                                  child: IconButton(
+                                    padding: EdgeInsets.zero,
+                                    icon: const Icon(Icons.remove, size: 18),
+                                    onPressed: () {
+                                      String productId = cart.items.values
+                                          .elementAt(index)
+                                          .productId as String;
+
+                                      cart.removeItem(productId);
+                                    },
                                   ),
                                 ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  'R\$ ${cart.items.values.elementAt(index).price.toStringAsFixed(2)}',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.grey.shade600,
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 12),
+                                  child: Text(
+                                    "${cart.items.values.elementAt(index).quantity}",
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 32,
+                                  height: 32,
+                                  child: IconButton(
+                                    padding: EdgeInsets.zero,
+                                    icon: const Icon(Icons.add, size: 18),
+                                    onPressed: () {
+                                      String productId =
+                                          cart.items.keys.elementAt(index);
+
+                                      Product? product =
+                                          productList.findById(productId);
+
+                                      cart.addItem(product);
+                                    },
                                   ),
                                 ),
                               ],
                             ),
-                          ),
-
-                          // Controles de quantidade - compactos
-                          Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              SizedBox(
-                                width: 32,
-                                height: 32,
-                                child: IconButton(
-                                  padding: EdgeInsets.zero,
-                                  icon: const Icon(Icons.remove, size: 18),
-                                  onPressed: () {
-                                    String productId = cart.items.values
-                                        .elementAt(index)
-                                        .productId as String;
-
-                                    cart.removeItem(productId);
-                                  },
-                                ),
-                              ),
-                              Container(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 12),
-                                child: Text(
-                                  "${cart.items.values.elementAt(index).quantity}",
-                                  style: const TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                width: 32,
-                                height: 32,
-                                child: IconButton(
-                                  padding: EdgeInsets.zero,
-                                  icon: const Icon(Icons.add, size: 18),
-                                  onPressed: () {
-                                    String productId =
-                                        cart.items.keys.elementAt(index);
-
-                                    Product? product =
-                                        productList.findById(productId);
-
-                                    cart.addItem(product);
-                                  },
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   );
